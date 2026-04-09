@@ -4,6 +4,7 @@
 <head>
     <title>Greenium Monitor</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -24,17 +25,56 @@ This page presents the estimated greenium and its term structure across maturiti
 </p>
 
 <h2>Latest Estimate</h2>
-
-<div id="chart" style="height:400px; border:1px solid #eee; display:flex; align-items:center; justify-content:center;">
-    <p>Greenium chart will appear here</p>
-</div>
-    
 <p><strong>Last updated:</strong> Coming soon</p>
+
+<div style="border:1px solid #eee; padding:20px; border-radius:8px; background:#fafafa;">
+    <canvas id="greeniumChart"></canvas>
+</div>
 
 <h2>Data</h2>
 <p>Download datasets and vintages.</p>
 
 </div>
+
+    <script>
+const ctx = document.getElementById('greeniumChart');
+
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [1, 2, 5, 10, 20, 30],
+        datasets: [{
+            label: 'Greenium (bps)',
+            data: [2.1, 2.8, 3.6, 3.9, 3.4, 3.1],
+            borderWidth: 2,
+            fill: false,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true
+            }
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Maturity (Years)'
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Basis Points'
+                }
+            }
+        }
+    }
+});
+</script>
 
 </body>
 </html>
