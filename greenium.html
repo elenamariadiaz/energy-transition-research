@@ -24,7 +24,7 @@
         This page presents the estimated greenium and its term structure across maturities.
     </p>
 
-    <p><strong>Last updated:</strong> Coming soon</p>
+    <p><strong>Last updated:</strong> <span id="lastUpdated">Loading...</span></p>
 
     <h2>Current Greenium Term Structure</h2>
     <p>
@@ -48,7 +48,12 @@
     <p>Surface view of the greenium term structure across maturities and over time.</p>
     
     <div style="border:1px solid #eee; padding:20px; border-radius:8px; background:#fafafa; margin-bottom:40px;">
-        <img src="assets/term_structure_surface.png" alt="Term Structure Through Time" style="width:100%; height:auto; display:block;">
+        <img
+            id="termStructureSurface"
+            src="data/term_structure_surface.png"
+            alt="Term Structure Through Time"
+            style="width:100%; height:auto; display:block;"
+        >
     </div>
 
     <h2>Data</h2>
@@ -59,82 +64,127 @@
 </div>
 
 <script>
-const termCtx = document.getElementById('termStructureChart');
+let termStructureChart;
+let timeSeriesChart;
 
-new Chart(termCtx, {
-    type: 'line',
-    data: {
-        labels: [1, 2, 5, 10, 20, 30],
-        datasets: [{
-            label: 'Greenium (bps)',
-            data: [2.1, 2.8, 3.6, 3.9, 3.4, 3.1],
-            borderWidth: 2,
-            pointRadius: 4,
-            tension: 0.3
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                display: false
-            }
-        },
-        scales: {
-            x: {
-                title: {
-                    display: true,
-                    text: 'Maturity (Years)'
-                }
-            },
-            y: {
-                title: {
-                    display: true,
-                    text: 'Basis Points'
-                }
-            }
-        }
+async function loadMetadata() {
+    try {
+        const response = await fetch('data/metadata.json');
+        const metadata = await response.json();
+        document.getElementById('lastUpdated').textContent = metadata.last_update || 'Unavailable';
+    } catch (error) {
+        document.getElementById('lastUpdated').textContent = 'Unavailable';
+        console.error('Error loading metadata:', error);
     }
-});
+}
 
-const timeCtx = document.getElementById('timeSeriesChart');
+async function loadTermStructureChart() {
+    try {
+        const response = await fetch('data/latest_term_structure.json');
+        const data = await response.json();
 
-new Chart(timeCtx, {
-    type: 'line',
-    data: {
-        labels: ['2023-Q1', '2023-Q2', '2023-Q3', '2023-Q4', '2024-Q1', '2024-Q2', '2024-Q3', '2024-Q4'],
-        datasets: [{
-            label: 'Greenium Factor',
-            data: [1.5, 2.0, 2.8, 3.1, 2.7, 2.4, 2.9, 3.3],
-            borderWidth: 2,
-            pointRadius: 3,
-            tension: 0.3
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                display: false
-            }
-        },
-        scales: {
-            x: {
-                title: {
-                    display: true,
-                    text: 'Date'
-                }
+        const labels = data.maturities || [];
+        const values = data.greenium || [];
+
+        const termCtx = document.getElementById('termStructureChart').getContext('2d');
+
+        termStructureChart = new Chart(termCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Greenium (bps)',
+                    data: values,
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    tension: 0.3
+                }]
             },
-            y: {
-                title: {
-                    display: true,
-                    text: 'Basis Points'
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Maturity (Years)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Basis Points'
+                        }
+                    }
                 }
             }
-        }
+        });
+    } catch (error) {
+        console.error('Error loading term structure chart:', error);
     }
-});
+}
 
+async function loadTimeSeriesChart() {
+    try {
+        const response = await fetch('data/zt_timeseries.json');
+        const data = await response.json();
+
+        const labels = data.map(item => item.date);
+        const values = data.map(item => item.zt);
+
+        const timeCtx = document.getElementById('timeSeriesChart').getContext('2d');
+
+        timeSeriesChart = new Chart(timeCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Greenium Factor',
+                    data: values,
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Basis Points'
+                        }
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error loading time series chart:', error);
+    }
+}
+
+async function initializePage() {
+    await loadMetadata();
+    await loadTermStructureChart();
+    await loadTimeSeriesChart();
+}
+
+initializePage();
 </script>
 
 </body>
