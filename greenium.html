@@ -45,12 +45,10 @@
     </div>
 
     <h2>Term Structure Through Time</h2>
-    <p>
-        Heatmap-style placeholder for the evolution of the greenium term structure across time and maturities.
-    </p>
-
+    <p>Surface view of the greenium term structure across maturities and over time.</p>
+    
     <div style="border:1px solid #eee; padding:20px; border-radius:8px; background:#fafafa; margin-bottom:40px;">
-        <canvas id="heatmapPlaceholderChart"></canvas>
+        <img src="assets/term_structure_surface.png" alt="Term Structure Through Time" style="width:100%; height:auto; display:block;">
     </div>
 
     <h2>Data</h2>
@@ -137,45 +135,6 @@ new Chart(timeCtx, {
     }
 });
 
-const heatmapCtx = document.getElementById('heatmapPlaceholderChart');
-
-new Chart(heatmapCtx, {
-    type: 'bar',
-    data: {
-        labels: ['1Y', '2Y', '5Y', '10Y', '20Y', '30Y'],
-        datasets: [{
-            label: 'Latest snapshot placeholder',
-            data: [2.1, 2.8, 3.6, 3.9, 3.4, 3.1],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                display: false
-            },
-            title: {
-                display: true,
-                text: 'Placeholder for term structure through time'
-            }
-        },
-        scales: {
-            x: {
-                title: {
-                    display: true,
-                    text: 'Maturity'
-                }
-            },
-            y: {
-                title: {
-                    display: true,
-                    text: 'Basis Points'
-                }
-            }
-        }
-    }
-});
 </script>
 
 </body>
