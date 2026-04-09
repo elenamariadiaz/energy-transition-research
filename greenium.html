@@ -18,28 +18,52 @@
 
 <div class="container">
 
-<h1>Greenium Monitor</h1>
+    <h1>Greenium Monitor</h1>
 
-<p>
-This page presents the estimated greenium and its term structure across maturities.
-</p>
+    <p>
+        This page presents the estimated greenium and its term structure across maturities.
+    </p>
 
-<h2>Latest Estimate</h2>
-<p><strong>Last updated:</strong> Coming soon</p>
+    <p><strong>Last updated:</strong> Coming soon</p>
 
-<div style="border:1px solid #eee; padding:20px; border-radius:8px; background:#fafafa;">
-    <canvas id="greeniumChart"></canvas>
+    <h2>Current Greenium Term Structure</h2>
+    <p>
+        Estimated greenium across maturities based on the latest available data.
+    </p>
+
+    <div style="border:1px solid #eee; padding:20px; border-radius:8px; background:#fafafa; margin-bottom:40px;">
+        <canvas id="termStructureChart"></canvas>
+    </div>
+
+    <h2>Greenium Over Time</h2>
+    <p>
+        Evolution of the estimated greenium factor over time.
+    </p>
+
+    <div style="border:1px solid #eee; padding:20px; border-radius:8px; background:#fafafa; margin-bottom:40px;">
+        <canvas id="timeSeriesChart"></canvas>
+    </div>
+
+    <h2>Term Structure Through Time</h2>
+    <p>
+        Heatmap-style placeholder for the evolution of the greenium term structure across time and maturities.
+    </p>
+
+    <div style="border:1px solid #eee; padding:20px; border-radius:8px; background:#fafafa; margin-bottom:40px;">
+        <canvas id="heatmapPlaceholderChart"></canvas>
+    </div>
+
+    <h2>Data</h2>
+    <p>
+        Download datasets and vintages.
+    </p>
+
 </div>
 
-<h2>Data</h2>
-<p>Download datasets and vintages.</p>
+<script>
+const termCtx = document.getElementById('termStructureChart');
 
-</div>
-
-    <script>
-const ctx = document.getElementById('greeniumChart');
-
-new Chart(ctx, {
+new Chart(termCtx, {
     type: 'line',
     data: {
         labels: [1, 2, 5, 10, 20, 30],
@@ -47,7 +71,7 @@ new Chart(ctx, {
             label: 'Greenium (bps)',
             data: [2.1, 2.8, 3.6, 3.9, 3.4, 3.1],
             borderWidth: 2,
-            fill: false,
+            pointRadius: 4,
             tension: 0.3
         }]
     },
@@ -55,7 +79,7 @@ new Chart(ctx, {
         responsive: true,
         plugins: {
             legend: {
-                display: true
+                display: false
             }
         },
         scales: {
@@ -63,6 +87,84 @@ new Chart(ctx, {
                 title: {
                     display: true,
                     text: 'Maturity (Years)'
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Basis Points'
+                }
+            }
+        }
+    }
+});
+
+const timeCtx = document.getElementById('timeSeriesChart');
+
+new Chart(timeCtx, {
+    type: 'line',
+    data: {
+        labels: ['2023-Q1', '2023-Q2', '2023-Q3', '2023-Q4', '2024-Q1', '2024-Q2', '2024-Q3', '2024-Q4'],
+        datasets: [{
+            label: 'Greenium Factor',
+            data: [1.5, 2.0, 2.8, 3.1, 2.7, 2.4, 2.9, 3.3],
+            borderWidth: 2,
+            pointRadius: 3,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Date'
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Basis Points'
+                }
+            }
+        }
+    }
+});
+
+const heatmapCtx = document.getElementById('heatmapPlaceholderChart');
+
+new Chart(heatmapCtx, {
+    type: 'bar',
+    data: {
+        labels: ['1Y', '2Y', '5Y', '10Y', '20Y', '30Y'],
+        datasets: [{
+            label: 'Latest snapshot placeholder',
+            data: [2.1, 2.8, 3.6, 3.9, 3.4, 3.1],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            },
+            title: {
+                display: true,
+                text: 'Placeholder for term structure through time'
+            }
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Maturity'
                 }
             },
             y: {
