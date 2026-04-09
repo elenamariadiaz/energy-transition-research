@@ -1,0 +1,9 @@
+{
+  "vintages": [
+    {
+      "date": "2026-04-09",
+      "file": "data/vintages_zip/2026-04-09.zip"
+    }
+  ],
+  "all_vintages_file": "data/all_vintages.zip"
+}
