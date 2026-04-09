@@ -21,7 +21,7 @@
 
     <p>
         This page provides downloadable historical vintages of the Greenium Monitor outputs.
-        Each vintage includes:
+        Each vintage includes
         <code>term_structure.csv</code>,
         <code>zt_timeseries.csv</code>,
         and <code>metadata.json</code>.
@@ -29,10 +29,8 @@
 
     <h2>Available vintages</h2>
 
-    <div style="border:1px solid #eee; padding:20px; border-radius:8px; background:#fafafa; margin-bottom:20px;">
-        <a href="data/vintages_zip/2026-04-09.zip" download style="text-decoration:none; font-weight:600;">
-            Download vintage 2026-04-09
-        </a>
+    <div id="vintagesList">
+        <p>Loading vintages...</p>
     </div>
 
     <h2>Full archive</h2>
@@ -41,15 +39,49 @@
         Download the complete archive of all vintages for replication, forecasting exercises, or historical analysis.
     </p>
 
-    <div style="margin-top:20px; margin-bottom:40px;">
-        <a href="data/all_vintages.zip"
-           download
-           style="display:inline-block; padding:12px 20px; border:1px solid #ddd; border-radius:8px; background:#fafafa; text-decoration:none; font-weight:600;">
-            Download all vintages
-        </a>
+    <div id="allVintagesBox" style="margin-top:20px; margin-bottom:40px;">
+        <p>Loading archive...</p>
     </div>
 
 </div>
+
+<script>
+async function loadVintages() {
+    try {
+        const response = await fetch('data/vintages_index.json');
+        const index = await response.json();
+
+        const vintagesList = document.getElementById('vintagesList');
+        const allVintagesBox = document.getElementById('allVintagesBox');
+
+        if (!index.vintages || index.vintages.length === 0) {
+            vintagesList.innerHTML = '<p>No vintages available yet.</p>';
+        } else {
+            vintagesList.innerHTML = index.vintages.map(vintage => `
+                <div style="border:1px solid #eee; padding:20px; border-radius:8px; background:#fafafa; margin-bottom:20px;">
+                    <a href="${vintage.file}" download style="text-decoration:none; font-weight:600;">
+                        Download vintage ${vintage.date}
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        allVintagesBox.innerHTML = `
+            <a href="${index.all_vintages_file}"
+               download
+               style="display:inline-block; padding:12px 20px; border:1px solid #ddd; border-radius:8px; background:#fafafa; text-decoration:none; font-weight:600;">
+                Download all vintages
+            </a>
+        `;
+    } catch (error) {
+        document.getElementById('vintagesList').innerHTML = '<p>Unable to load vintages.</p>';
+        document.getElementById('allVintagesBox').innerHTML = '<p>Unable to load full archive.</p>';
+        console.error('Error loading vintages index:', error);
+    }
+}
+
+loadVintages();
+</script>
 
 </body>
 </html>
